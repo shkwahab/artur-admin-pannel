@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+:root {
+  /* --primaryColor: #E6B970; */
+  --primaryColor: #887010;
+  /* --secondaryColor: #242424; */
+  /* --secondaryColor: #1f1e1e; */
+  --secondaryColor: #ffffff;
+}
+h1,h2,h3,div{
+  font-family: 'PT Serif', serif;
+  font-weight: bold;
+}
+p,span{
+  font-family: 'PT Serif', serif;
+}
+
+body {
+  margin: 0 auto;
+  min-height: 100vh;
+  /* border: 1px solid red; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--secondaryColor);
+  overflow-x: hidden !important;
+}
+button {
+  
+  cursor: pointer;
+}
+button#editBtn{
+  background-color: #887010 !important;
+}
+
+#root {
+  /* min-height: 100vh; */
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
+}
+
+/* body::-webkit-scrollbar {
+  display: none;
+} */
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.center-container {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* border: 1px solid red; */
+}
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
