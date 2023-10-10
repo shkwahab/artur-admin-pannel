@@ -22,46 +22,73 @@ export default function Users() {
   const [message, setmessage] = useState("");
   const [apiCalled, setapiCalled] = useState(false);
 
-  const addName = (e) => setaddname(e.target.value);
-  const addEmail = (e) => setaddemail(e.target.value);
-  const addPhone = (e) => setaddphone(e.target.value);
   const [user, setUser] = useState([]); // Initialize user as an empty array
 
+
+  // const getUsers = async () => {
+  //   setIsLoading(true);
+  //   const usersCollectionRef = collection(db, "UserData");
+  //   const querySnapshot = await getDocs(usersCollectionRef);
+  //   const users = [];
+
+  //   for (const doc of querySnapshot.docs) {
+  //     const user = doc.data();
+  //     user.id = doc.id; // Store the document ID in the user object
+    
+  //     user.events = [];
+    
+  //     const eventCollectionRef = collection(doc.ref, "EventData");
+  //     const eventSnapshot = await getDocs(eventCollectionRef);
+    
+  //     const allEventData = []; // Create an array to store all event data
+    
+  //     const eventPromises = eventSnapshot.docs.map(async (eventDoc) => {
+        
+  //       allEventData.push(eventDoc.data());
+  //     });
+    
+  //     await Promise.all(eventPromises); // Wait for all events to be collected
+    
+  //     user.events = allEventData; // Store event data in the user object
+    
+  //     users.push(user);
+  //   }
+    
+  //   setUser(users);
+    
+    
+  //   setIsLoading(false);
+  // };
 
   const getUsers = async () => {
     setIsLoading(true);
     const usersCollectionRef = collection(db, "UserData");
     const querySnapshot = await getDocs(usersCollectionRef);
     const users = [];
-
+  
     for (const doc of querySnapshot.docs) {
       const user = doc.data();
       user.id = doc.id; // Store the document ID in the user object
-    
-      user.events = [];
-    
+  
       const eventCollectionRef = collection(doc.ref, "EventData");
       const eventSnapshot = await getDocs(eventCollectionRef);
-    
+  
       const allEventData = []; // Create an array to store all event data
-    
-      const eventPromises = eventSnapshot.docs.map(async (eventDoc) => {
-        allEventData.push(eventDoc.data());
-      });
-    
-      await Promise.all(eventPromises); // Wait for all events to be collected
-    
+  
+      for (const eventDoc of eventSnapshot.docs) {
+        const eventData = eventDoc.data();
+        eventData.id = eventDoc.id; // Store the document ID of the event in the event data
+        allEventData.push(eventData);
+      }
+  
       user.events = allEventData; // Store event data in the user object
-    
       users.push(user);
     }
-    
+  
     setUser(users);
-    
-    
     setIsLoading(false);
   };
-
+  
   const keys = ["Name","Email","AccountType"];
   const [search, setsearch] = useState("");
   const searches = (datas) => {

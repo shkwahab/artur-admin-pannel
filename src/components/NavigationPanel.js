@@ -5,7 +5,8 @@ import signOutImage from "../assets/logoutIcon.svg";
 import "../styles/navigationPanel.css";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/userContext";
-import LogoImg from "../assets/logo.png";
+import LogoImg from "../assets/icon.png";
+import {ImArrowRight2 } from "react-icons/im"
 
 const NavigationPanel = (props) => {
   const { logout } = useContext(AuthContext);
@@ -18,8 +19,8 @@ const NavigationPanel = (props) => {
 
   return (
     <div className="navigation-panel">
-      <div className="logo">
-        <img src={LogoImg} />
+      <div className="">
+        <img src={LogoImg} className=" w-24" />
       </div>
       <div className="options-container">
         <ul>
@@ -57,11 +58,7 @@ const NavigationPanel = (props) => {
         </ul>
       </div>
       <div className="sign-out-container">
-        <img
-          src={signOutImage}
-          alt=""
-          style={{ width: "19px", height: "24px" }}
-        ></img>
+        <ImArrowRight2 className=" mx-2 text-xl font-bol text-[#887010]"/>
         <button  className="sign-out" onClick={signOut}>
           Sign out
         </button>

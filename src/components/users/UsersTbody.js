@@ -18,8 +18,9 @@ export default function UsersTbody(props) {
   const updateSource = (e) => setsourceupdate(e.target.value);
   const [showEventModal, setshowEventModal] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
-  
+
   const Events = props.events.map((event) => ({
+    id: event.id,
     Title: event.Title,
     Total: event.Total,
     Rating: event.rating ? event.rating : "None",
@@ -30,47 +31,26 @@ export default function UsersTbody(props) {
     EndTime: event.EndTime,
     Website: event.Website,
     Location: event.Location,
-    ArtistName:event.ArtistData.map((artist)=>{
+    ArtistName: event.ArtistData.map((artist) => {
       return artist.ArtistName
     }),
-    ArtistWebsite:event.ArtistData.map((artist)=>{
+    ArtistWebsite: event.ArtistData.map((artist) => {
       return artist.Website
     }),
-    ArtistAddress:event.ArtistData.map((artist)=>{
+    ArtistAddress: event.ArtistData.map((artist) => {
       return artist.ArtistAddress
     })
   }));
-  // const [eventupateTitle,seteventTitleUpdate]=useState(props.events.forEach((event)=>return event.ArtistName))
-  const eventArtistTitles = props.events.map((event) => event.ArtistData.map((artist)=> artist.ArtistName));
-  const eventArtistWebsite = props.events.map((event) => event.ArtistData.map((artist)=>artist.Website));
-  const eventArtistAddress = props.events.map((event) => event.ArtistData.map((artist)=>artist.ArtistAddress));
+  const [updateEvents, setEvents] = useState(Events)
 
-const [eventAristTitleUpdate, setEventArtistTitleUpdate] = useState(eventArtistTitles);
-const [eventAristWebsiteUpdate, setEventArtistWebsiteUpdate] = useState(eventArtistWebsite);
-const [eventAristAddressUpdate, setEventArtistAddressUpdate] = useState(eventArtistAddress);
-
-
-console.log("Event Arist Name",Events)
+  console.log("Event Arist Name", Events)
   const showModal = () => {
     setmodal(true);
   };
 
   const hideModal = () => setmodal(false);
 
-  const updateuser = async (uid) => {
-    setIsLoading(true);
-    let userArray = {
-      AccountType: nameupdate,
-      Email: emailupdate,
-      Name: usernameupdate,
-      Source: sourceupdate
-    };
-    const updatedocument = doc(db, "UserData", uid);
-    await updateDoc(updatedocument, userArray);
-    hideModal();
-    window.location.reload();
-    setIsLoading(false);
-  };
+
 
   const showNextEvent = () => {
     if (eventIndex < Events.length - 1) {
@@ -83,6 +63,162 @@ console.log("Event Arist Name",Events)
       setEventIndex(eventIndex - 1);
     }
   };
+
+  const updateEventTitle = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Title = e.target.value;
+    setEvents(updatedEvents);
+  };
+
+  const updateEventDescription = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Description = e.target.value;
+    setEvents(updatedEvents);
+  };
+
+  const updateEventRating = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Rating = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventTotal = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Total = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventLocation = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Location = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventWebsite = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].Website = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventStartDate = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].StartDate = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventStartTime = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].StartTime = e.target.value;
+    setEvents(updatedEvents);
+  };
+
+  const updateEventEndDate = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].EndDate = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventEndTime = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].EndTime = e.target.value;
+    setEvents(updatedEvents);
+  };
+  const updateEventArtistName = (e) => {
+    const updatedEvents = [...updateEvents];
+    const artistNames = e.target.value.split(',').map((name) => name.trim());
+    const maxLength = Math.max(artistNames.length, updatedEvents[eventIndex].ArtistAddress.length, updatedEvents[eventIndex].ArtistWebsite.length);
+  
+    // Pad ArtistName, ArtistAddress, and ArtistWebsite arrays
+    updatedEvents[eventIndex].ArtistName = artistNames;
+    updatedEvents[eventIndex].ArtistAddress = padArray(updatedEvents[eventIndex].ArtistAddress, maxLength);
+    updatedEvents[eventIndex].ArtistWebsite = padArray(updatedEvents[eventIndex].ArtistWebsite, maxLength);
+    setEvents(updatedEvents);
+  };
+  
+  // Function to pad an array to a certain length with empty strings
+  function padArray(array, length) {
+    if (array.length < length) {
+      const emptyStrings = new Array(length - array.length).fill('');
+      return [...array, ...emptyStrings];
+    }
+    return array.slice(0, length); // Truncate if it's longer
+  }
+  
+  
+  const updateEventArtistAddress = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].ArtistAddress = e.target.value.split(',').map((address) => address.trim());
+    setEvents(updatedEvents);
+  };
+  
+  const updateEventArtistWebsite = (e) => {
+    const updatedEvents = [...updateEvents];
+    updatedEvents[eventIndex].ArtistWebsite = e.target.value.split(',').map((website) => website.trim());
+    setEvents(updatedEvents);
+  };
+  
+
+  const updateuser = async (uid) => {
+    setIsLoading(true);
+    let userArray = {
+      AccountType: nameupdate,
+      Email: emailupdate,
+      Name: usernameupdate,
+      Source: sourceupdate
+    };
+    const updatedocument = doc(db, "UserData", uid);
+
+    const res = await updateDoc(updatedocument, userArray);
+    console.log(res)
+    hideModal();
+    window.location.reload();
+    setIsLoading(false);
+  };
+
+
+
+  const updateEvent = async () => {
+    const userId = props.id;
+    const eventIndexToUpdate = eventIndex;
+    const eventRef = doc(db, "UserData", userId, "EventData", Events[eventIndex].id);
+
+    const artistNames = typeof updateEvents[eventIndex].ArtistName === 'string'
+      ? updateEvents[eventIndex].ArtistName.split(',').map(name => name.trim())
+      : Array.isArray(updateEvents[eventIndex].ArtistName)
+        ? updateEvents[eventIndex].ArtistName
+        : [updateEvents[eventIndex].ArtistName];
+
+    const artistAddresses = typeof updateEvents[eventIndex].ArtistAddress === 'string'
+      ? updateEvents[eventIndex].ArtistAddress.split(',').map(address => address.trim())
+      : Array.isArray(updateEvents[eventIndex].ArtistAddress)
+        ? updateEvents[eventIndex].ArtistAddress
+        : [updateEvents[eventIndex].ArtistAddress];
+
+    const artistWebsites = typeof updateEvents[eventIndex].ArtistWebsite === 'string'
+      ? updateEvents[eventIndex].ArtistWebsite.split(',').map(website => website.trim())
+      : Array.isArray(updateEvents[eventIndex].ArtistWebsite)
+        ? updateEvents[eventIndex].ArtistWebsite
+        : [updateEvents[eventIndex].ArtistWebsite];
+
+    const updatedEvent = {
+      Title: updateEvents[eventIndex].Title,
+      Total: updateEvents[eventIndex].Total,
+      Rating: updateEvents[eventIndex].Rating,
+      Description: updateEvents[eventIndex].Description,
+      StartDate: updateEvents[eventIndex].StartDate,
+      StartTime: updateEvents[eventIndex].StartTime,
+      EndDate: updateEvents[eventIndex].EndDate,
+      EndTime: updateEvents[eventIndex].EndTime,
+      Website: updateEvents[eventIndex].Website,
+      Location: updateEvents[eventIndex].Location,
+      ArtistData: artistNames.map((name, index) => ({
+        ArtistName: name,
+        ArtistAddress: artistAddresses[index],
+        Website: artistWebsites[index],
+      })),
+    };
+
+    console.log(updatedEvent)
+    await updateDoc(eventRef, updatedEvent);
+    setshowEventModal(false);
+    window.location.reload();
+    setIsLoading(false);
+  };
+
 
   return (
     <>
@@ -188,7 +324,9 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Title}
+                    // value={updateEvents[eventIndex].Title}
+                    value={updateEvents[eventIndex].Title}
+                    changeHandler={updateEventTitle}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -196,7 +334,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Description}
+                    value={updateEvents[eventIndex].Description}
+                    changeHandler={updateEventDescription}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -204,7 +343,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Rating}
+                    value={updateEvents[eventIndex].Rating}
+                    changeHandler={updateEventRating}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -212,7 +352,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Total}
+                    value={updateEvents[eventIndex].Total}
+                    changeHandler={updateEventTotal}
                   />
                 </div>
               </div>
@@ -224,7 +365,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Location}
+                    value={updateEvents[eventIndex].Location}
+                    changeHandler={updateEventLocation}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -232,7 +374,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].Website}
+                    value={updateEvents[eventIndex].Website}
+                    changeHandler={updateEventWebsite}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -240,7 +383,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].StartDate}
+                    value={updateEvents[eventIndex].StartDate}
+                    changeHandler={updateEventStartDate}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -248,7 +392,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].StartTime}
+                    value={updateEvents[eventIndex].StartTime}
+                    changeHandler={updateEventStartTime}
                   />
                 </div>
               </div>
@@ -261,7 +406,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].EndDate}
+                    value={updateEvents[eventIndex].EndDate}
+                    changeHandler={updateEventEndDate}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -269,7 +415,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].EndTime}
+                    value={updateEvents[eventIndex].EndTime}
+                    changeHandler={updateEventEndTime}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -277,7 +424,8 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].ArtistName}
+                    value={updateEvents[eventIndex].ArtistName}
+                    changeHandler={updateEventArtistName}
                   />
                 </div>
                 <div className="user-modal-input-label-wrapper text-white">
@@ -285,19 +433,21 @@ console.log("Event Arist Name",Events)
                   <InputField
                     style={{ width: "100%" }}
                     fieldStyle={{ height: "45px" }}
-                    value={Events[eventIndex].ArtistAddress}
+                    value={updateEvents[eventIndex].ArtistAddress}
+                    changeHandler={updateEventArtistAddress}
                   />
                 </div>
-              
+
               </div>
 
               <div className=" flex justify-center my-4">
-              <div className=" text-white">
+                <div className=" text-white">
                   <span className="">Artist Website:</span>
                   <InputField
-                    value={Events[eventIndex].ArtistWebsite}
+                    value={updateEvents[eventIndex].ArtistWebsite}
+                    changeHandler={updateEventArtistWebsite}
                   />
-                </div> 
+                </div>
               </div>
 
 
@@ -327,6 +477,18 @@ console.log("Event Arist Name",Events)
             </div>)
           }
         </div>
+        {Events.length > 0 && (
+          <div className=" flex justify-center">
+            <button
+              className="user-modal-btn"
+              style={{ margin: "10px 20px", cursor: "pointer" }}
+              onClick={updateEvent}
+            >
+              Update Event
+            </button>
+          </div>
+        )}
+
       </Modal>
     </>
   );

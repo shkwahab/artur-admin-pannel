@@ -9,17 +9,7 @@ const ProfilePicture = (props) => {
   return (
     <div className="profile-picture" style={props.style}>
       
-      <img
-        style={
-          !props.picture
-            ? {
-                height: "40px",
-              }
-            : {}
-        }
-        src={props.picture ? props.picture : ProfileIcon}
-        alt="img"
-      ></img>
+     
     </div>
   );
 };
