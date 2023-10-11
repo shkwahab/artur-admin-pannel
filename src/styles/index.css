@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
 :root {
   /* --primaryColor: #E6B970; */
@@ -9,6 +10,23 @@
 h1,h2,h3,div{
   font-family: 'PT Serif', serif;
   font-weight: bold;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 20px; /* Add some right padding for the arrow */
+  border: 1px solid #ccc; /* Add a border to the select box */
+  border-radius: 4px;
+}
+
+/* Style the custom select arrow */
+select::after {
+  content: '▼'; /* Unicode down arrow character */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
 }
 p,span{
   font-family: 'PT Serif', serif;

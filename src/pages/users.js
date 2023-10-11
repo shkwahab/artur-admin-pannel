@@ -34,29 +34,29 @@ export default function Users() {
   //   for (const doc of querySnapshot.docs) {
   //     const user = doc.data();
   //     user.id = doc.id; // Store the document ID in the user object
-    
+
   //     user.events = [];
-    
+
   //     const eventCollectionRef = collection(doc.ref, "EventData");
   //     const eventSnapshot = await getDocs(eventCollectionRef);
-    
+
   //     const allEventData = []; // Create an array to store all event data
-    
+
   //     const eventPromises = eventSnapshot.docs.map(async (eventDoc) => {
-        
+
   //       allEventData.push(eventDoc.data());
   //     });
-    
+
   //     await Promise.all(eventPromises); // Wait for all events to be collected
-    
+
   //     user.events = allEventData; // Store event data in the user object
-    
+
   //     users.push(user);
   //   }
-    
+
   //   setUser(users);
-    
-    
+
+
   //   setIsLoading(false);
   // };
 
@@ -65,31 +65,31 @@ export default function Users() {
     const usersCollectionRef = collection(db, "UserData");
     const querySnapshot = await getDocs(usersCollectionRef);
     const users = [];
-  
+
     for (const doc of querySnapshot.docs) {
       const user = doc.data();
       user.id = doc.id; // Store the document ID in the user object
-  
+
       const eventCollectionRef = collection(doc.ref, "EventData");
       const eventSnapshot = await getDocs(eventCollectionRef);
-  
+
       const allEventData = []; // Create an array to store all event data
-  
+
       for (const eventDoc of eventSnapshot.docs) {
         const eventData = eventDoc.data();
         eventData.id = eventDoc.id; // Store the document ID of the event in the event data
         allEventData.push(eventData);
       }
-  
+
       user.events = allEventData; // Store event data in the user object
       users.push(user);
     }
-  
+
     setUser(users);
     setIsLoading(false);
   };
-  
-  const keys = ["Name","Email","AccountType"];
+
+  const keys = ["Name", "Email", "AccountType"];
   const [search, setsearch] = useState("");
   const searches = (datas) => {
     return datas.filter((item) =>
@@ -134,13 +134,13 @@ export default function Users() {
                 borderBottom: "0.5px solid rgba(124, 124, 124, 0.27)",
               }}
             >
-              <th className=" text-black" style={{color:"black", fontSize:"18px", fontWeight:"bold"}}>Name</th>
-              <th className=" text-black" style={{color:"black", fontSize:"18px", fontWeight:"bold"}}>Email</th>
-              <th className=" text-black" style={{color:"black", fontSize:"18px", fontWeight:"bold"}}>Account Type</th>
+              <th className=" text-black" style={{ color: "black", fontSize: "18px", fontWeight: "bold" }}>Name</th>
+              <th className=" text-black" style={{ color: "black", fontSize: "18px", fontWeight: "bold" }}>Email</th>
+              <th className=" text-black" style={{ color: "black", fontSize: "18px", fontWeight: "bold" }}>Account Type</th>
             </tr>
 
             {searches(user).map((val, ind) => {
-              
+
               return (
                 <UsersTbody
                   key={ind}
@@ -157,7 +157,10 @@ export default function Users() {
           </table>
         </div>
       </div>
+      <div>
 
+    
+      </div>
 
       {isLoading ? <LoadingSpinner /> : Users}
     </>

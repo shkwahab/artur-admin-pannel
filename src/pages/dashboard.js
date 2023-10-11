@@ -8,7 +8,7 @@ import {
   Firestore,
   query,
 } from "firebase/firestore";
-import moment from "moment";
+import {AiOutlineArrowDown,AiOutlineArrowUp} from "react-icons/ai"
 import { useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
 import TopUsersChart from "../components/dashboard/MostSubscribedUsersChart";
@@ -27,8 +27,8 @@ export default function Dashboard() {
   const [user, setUser] = useState([]); // Initialize user as an empty array
   const [event, setEvent] = useState([])
   const [mostUserEvents, setmostUserEvents] = useState([]);
-
-
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const[dropDown,setToggleDropDown]=useState(false)
 
 
   const getAllUsers = async () => {
@@ -36,7 +36,7 @@ export default function Dashboard() {
     try {
 
       const userLocations = {}; // Create an object to store revenue by location
-      let totalRevenue = 0; // Initialize the total revenue
+      let totalRev = 0;
 
 
       const usersCollectionRef = collection(db, "UserData");
@@ -76,21 +76,22 @@ export default function Dashboard() {
       user.forEach((userData) => {
 
         userData.events.forEach((event) => {
-          const userLocation = event.Location; // Replace with your actual location property
-          const userRevenue = event.Total; // Replace with your actual revenue property
+          const userLocation = event.Location;
+          const userRevenue = Number(event.Total);
 
-          // Accumulate revenue by location
-          userLocations[userLocation] = (userLocations[userLocation] || 0) + userRevenue;
-          totalRevenue += userRevenue;
-
+          userLocations[userLocation] = (userLocations[userLocation] || 0) + Number(userRevenue);
+          totalRev += userRevenue;
         });
       });
-      const revenueDistribution = {};
 
+      setTotalRevenue(totalRev)
+      // alert(totalRev)
+
+      const revenueDistribution = {};
       for (const location in userLocations) {
         if (userLocations.hasOwnProperty(location)) {
           const revenue = userLocations[location];
-          const percentage = (revenue / totalRevenue) * 100;
+          const percentage = (revenue / totalRev) * 100;
           revenueDistribution[location] = percentage;
         }
       }
@@ -146,7 +147,6 @@ export default function Dashboard() {
   useEffect(() => {
     getData();
   }, []);
-  const totalRevenue = event.reduce((total, data) => total + data.Total, 0);
   const [apiCall, setCall] = useState(false);
 
   useEffect(() => {
@@ -194,6 +194,9 @@ export default function Dashboard() {
               </div>
               <img src={WaveIcon} />
             </div>
+
+          </div>
+          <div className="dashboard-top">
             <div className="dashboard-card">
               <div>
                 <h4 className="card-top-heading">Total Revenue</h4>
@@ -201,23 +204,56 @@ export default function Dashboard() {
               </div>
               <img src={WaveIcon} />
             </div>
+            <div className=" dashboard-card relative">
+              <div className=" flex justify-between w-full">
+                <div>
+                Select Price
+                </div>
+                <div className={`${dropDown?"hidden":""}`} onClick={()=>{
+                  setToggleDropDown(true)
+                }}>
+                  <AiOutlineArrowDown className=" text-2xl"/>
+                </div>
+                <div className={`${dropDown?"":"hidden"}`} onClick={()=>{
+                  setToggleDropDown(false)
+                }}>
+                  <AiOutlineArrowUp className=" text-2xl"/>
+                </div>
+              </div>
+              <div className={`absolute z-10 left-4 top-20 ${dropDown?"":"hidden"}`}>
+                <div id="dropdown-menu" class=" absolutex mt-2 w-[300px] border-black border-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 border-opacity-20">
+
+                  <div class="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
+
+                    <input value={`0$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
+
+                    </input>
+                    <input value={`1$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
+                    </input>
+                    <input value={`5$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
+                      
+                    </input>
+                    <input value={`10$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
+                      
+                    </input>
+                    
+
+
+
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
 
           </div>
           <div>
+
+
             <div className=" mt-10 ">
-              {/* <div className="top-users-wrapper">
-                <h2 className="main-heading center">Most Revenue By Users</h2>
-                <div className="top-users-chart-wrapper">
-                  <TopUsersChart
-                    screenWidth={screenWidth}
-                    usersData={mostSubscribedUsers}
-                  // subsCount={mostSubscribedUsers.map(
-                  //   (user) => user.subscribers.length + 1
-                  // )}
-                  // userLabels={mostSubscribedUsers.map((user) => user.username)}
-                  />
-                </div>
-              </div> */}
+
 
               <div className="users-age-wrapper ">
                 <h2 className="  text-xl ">Revenue Variation by GeoLocation</h2>

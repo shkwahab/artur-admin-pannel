@@ -18,7 +18,7 @@ export default function UserAgeChart({ usersData, screenWidth, totalUsers }) {
   Object.keys(usersData).map((key) => {
     data.push({ name: "" + key, value: usersData[key] });
   });
-
+console.log(data)
   return (
     <>
 

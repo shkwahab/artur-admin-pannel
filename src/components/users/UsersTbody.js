@@ -121,14 +121,14 @@ export default function UsersTbody(props) {
     const updatedEvents = [...updateEvents];
     const artistNames = e.target.value.split(',').map((name) => name.trim());
     const maxLength = Math.max(artistNames.length, updatedEvents[eventIndex].ArtistAddress.length, updatedEvents[eventIndex].ArtistWebsite.length);
-  
+
     // Pad ArtistName, ArtistAddress, and ArtistWebsite arrays
     updatedEvents[eventIndex].ArtistName = artistNames;
     updatedEvents[eventIndex].ArtistAddress = padArray(updatedEvents[eventIndex].ArtistAddress, maxLength);
     updatedEvents[eventIndex].ArtistWebsite = padArray(updatedEvents[eventIndex].ArtistWebsite, maxLength);
     setEvents(updatedEvents);
   };
-  
+
   // Function to pad an array to a certain length with empty strings
   function padArray(array, length) {
     if (array.length < length) {
@@ -137,20 +137,20 @@ export default function UsersTbody(props) {
     }
     return array.slice(0, length); // Truncate if it's longer
   }
-  
-  
+
+
   const updateEventArtistAddress = (e) => {
     const updatedEvents = [...updateEvents];
     updatedEvents[eventIndex].ArtistAddress = e.target.value.split(',').map((address) => address.trim());
     setEvents(updatedEvents);
   };
-  
+
   const updateEventArtistWebsite = (e) => {
     const updatedEvents = [...updateEvents];
     updatedEvents[eventIndex].ArtistWebsite = e.target.value.split(',').map((website) => website.trim());
     setEvents(updatedEvents);
   };
-  
+
 
   const updateuser = async (uid) => {
     setIsLoading(true);
