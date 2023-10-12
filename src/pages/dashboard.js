@@ -6,9 +6,11 @@ import {
   getCountFromServer,
   getDocs,
   Firestore,
+  addDoc,
+  updateDoc,
   query,
 } from "firebase/firestore";
-import {AiOutlineArrowDown,AiOutlineArrowUp} from "react-icons/ai"
+import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai"
 import { useState } from "react";
 import LoadingSpinner from "../components/LoadingSpinner";
 import TopUsersChart from "../components/dashboard/MostSubscribedUsersChart";
@@ -28,11 +30,11 @@ export default function Dashboard() {
   const [event, setEvent] = useState([])
   const [mostUserEvents, setmostUserEvents] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
-  const[dropDown,setToggleDropDown]=useState(false)
-
+  const [dropDown, setToggleDropDown] = useState(false)
+  const [price, setPrice] = useState(1);
+  const [eventPricelength,setEventPriceLength]=useState(0);
 
   const getAllUsers = async () => {
-
     try {
 
       const userLocations = {}; // Create an object to store revenue by location
@@ -40,6 +42,17 @@ export default function Dashboard() {
 
 
       const usersCollectionRef = collection(db, "UserData");
+      const eventPrice = collection(db, "eventPrice");
+      const querySnapshotPrice=await getDocs(eventPrice);
+      console.log("Event Price",querySnapshotPrice);
+      let eventPriceData=undefined;
+      for(const doc of querySnapshotPrice.docs){
+        eventPriceData=doc.data();
+      }
+      // if(eventPriceData){
+        // }
+        setPrice(eventPriceData.price)
+        setEventPriceLength(eventPriceData);
       const querySnapshot = await getDocs(usersCollectionRef);
 
       settotalUsers(querySnapshot.docs.length);
@@ -161,19 +174,66 @@ export default function Dashboard() {
       console.log(apiCall, "x")
     }
   }, [apiCall]);
-
-
-
+  const addEventPrice = async () => {
+    try {
+      // Reference the "eventPrice" collection
+      const eventPriceCollectionRef = collection(db, "eventPrice");
+  
+      // Query the collection to check if a document already exists
+      const querySnapshot = await getDocs(eventPriceCollectionRef);
+  
+      if (!querySnapshot.empty) {
+        console.log("Document already exists. You can update it if needed.");
+      } else {
+        // If no document exists, create a new one
+        const eventPriceData = {
+          price: price, // or the value you want to store
+        };
+  
+        // Add a new document to the collection
+        const docRef = await addDoc(eventPriceCollectionRef, eventPriceData);
+  
+        console.log("Document written with ID: ", docRef.id);
+      }
+    } catch (error) {
+      console.error("Error creating Docs", error);
+    }
+  };
+  
+  
+  const updateEventPrice = async () => {
+    try {
+      // Reference the "eventPrice" collection
+      const eventPriceCollectionRef = collection(db, "eventPrice");
+  
+      // Define the document ID you want to update
+      const update_id = "I86ICXFF734NO1mCmXeR";
+  
+      // Reference the specific document by its ID
+      // const docRef = docs(eventPriceCollectionRef, update_id);
+  
+      // Check if the document with the specified ID exists
+      const querySnapshot = await getDocs(eventPriceCollectionRef);
+  
+      if (!querySnapshot.empty) {
+        // If a document exists, update its data
+        const docToUpdate = querySnapshot.docs[0].ref; // Assuming only one document exists
+        const eventPriceData = { price: price };
+  
+        await updateDoc(docToUpdate, eventPriceData);
+        
+        console.log("Document updated successfully.");
+      } else {
+        console.log("Document not found. You can add a new one if needed.");
+      }
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  };
+  
+  
   return (
     <div className="dashboad">
-      {/* <div>
-
-        {JSON.stringify(user)}
-      </div> */}
-
-
-
-
       <h2 className="main-heading underline">Dashboard</h2>
       {loading ? (
         <LoadingSpinner />
@@ -207,40 +267,52 @@ export default function Dashboard() {
             <div className=" dashboard-card relative">
               <div className=" flex justify-between w-full">
                 <div>
-                Select Price
+                  Select Price
                 </div>
-                <div className={`${dropDown?"hidden":""}`} onClick={()=>{
+                <div className={`${dropDown ? "hidden" : ""}`} onClick={() => {
                   setToggleDropDown(true)
                 }}>
-                  <AiOutlineArrowDown className=" text-2xl"/>
+                  <AiOutlineArrowDown className=" text-2xl" />
                 </div>
-                <div className={`${dropDown?"":"hidden"}`} onClick={()=>{
+                <div className={`${dropDown ? "" : "hidden"}`} onClick={() => {
                   setToggleDropDown(false)
                 }}>
-                  <AiOutlineArrowUp className=" text-2xl"/>
+                  <AiOutlineArrowUp className=" text-2xl" />
                 </div>
               </div>
-              <div className={`absolute z-10 left-4 top-20 ${dropDown?"":"hidden"}`}>
-                <div id="dropdown-menu" class=" absolutex mt-2 w-[300px] border-black border-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 border-opacity-20">
+              <div className={`absolute z-10 left-4 top-20 ${dropDown ? "" : "hidden"}`}>
+                <div id="dropdown-menu" className=" absolutex mt-2 w-[300px] border-black border-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 border-opacity-20">
 
-                  <div class="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
+                  <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
 
-                    <input value={`0$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
-
+                    <input value={`0$`} onClick={async()=> {
+                      setPrice(0);
+                            addEventPrice();
+                           await updateEventPrice();
+                      setToggleDropDown(false)
+                    }} className={` outline-none rounded-md px-4 py-2 text-sm ${price===0?"text-gray-700":"text-gray-500"} hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input value={`1$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
+                    <input onClick={async() => {
+                      setPrice(1);
+                      addEventPrice();
+                      updateEventPrice();
+                      setToggleDropDown(false)
+                    }} value={`1$`} className={`${price===1?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input value={`5$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
-                      
+                    <input onClick={async() => {
+                      setPrice(5);
+                      addEventPrice();
+                      await updateEventPrice()
+                      setToggleDropDown(false)
+                    }} value={`5$`} className={` ${price===5?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input value={`10$`}  class=" outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer" >
-                      
+                    <input onClick={async() => {
+                      setPrice(10);
+                      addEventPrice();
+                      await updateEventPrice();
+                      setToggleDropDown(false)
+                    }} value={`10$`} className={` ${price===10?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`}>
                     </input>
-                    
-
-
-
-
                   </div>
 
                 </div>
