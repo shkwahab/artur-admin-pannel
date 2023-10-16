@@ -285,7 +285,7 @@ export default function Dashboard() {
                 <div>
                   Set Price
                   <p className="font-normal">
-                    {price?price:0}
+                  ${price?price:1} 
                   </p>
                 </div>
                 <div className={`${dropDown ? "hidden" : ""}`} onClick={() => {
@@ -304,19 +304,19 @@ export default function Dashboard() {
 
                   <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
 
-                    <input value={`0$`} onClick={()=>{
+                    <input value={`$0`} onClick={()=>{
                       handlePriceChange(0)
                     }} className={` outline-none rounded-md px-4 py-2 text-sm ${price===0?"text-gray-700":"text-gray-500"} hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input  value={`1$`} onClick={()=>{
+                    <input  value={`$1`} onClick={()=>{
                       handlePriceChange(1)
                     }} className={`${price===1?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input  value={`5$`} onClick={()=>{
+                    <input  value={`$5`} onClick={()=>{
                       handlePriceChange(5)
                     }} className={` ${price===5?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input  value={`10$`} onClick={()=>{
+                    <input  value={`$10`} onClick={()=>{
                       handlePriceChange(10)
                     }} className={` ${price===10?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`}>
                     </input>
@@ -331,7 +331,7 @@ export default function Dashboard() {
           <div>
 
 
-            <div className=" mt-10 ">
+            {/* <div className=" mt-10 ">
 
 
               <div className="users-age-wrapper ">
@@ -346,10 +346,10 @@ export default function Dashboard() {
                 </div>
               </div>
 
-            </div>
+            </div> */}
           </div>
 
-          <div className="dashboard-table-wrapper">
+          <div className="dashboard-table-wrapper mt-10">
             <h2 className=" text-xl">Most Events By Users</h2>
             <div className="table w-full">
               <table >
