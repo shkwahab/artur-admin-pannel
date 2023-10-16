@@ -285,7 +285,7 @@ export default function Dashboard() {
                 <div>
                   Set Price
                   <p className="font-normal">
-                    {price?price:1}
+                    {price?price:0}
                   </p>
                 </div>
                 <div className={`${dropDown ? "hidden" : ""}`} onClick={() => {
