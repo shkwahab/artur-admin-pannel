@@ -200,38 +200,54 @@ export default function Dashboard() {
     }
   };
   
+ 
   
-  const updateEventPrice = async () => {
+  const updatePrice = async (newPrice) => {
     try {
       // Reference the "eventPrice" collection
       const eventPriceCollectionRef = collection(db, "eventPrice");
   
-      // Define the document ID you want to update
-      const update_id = "I86ICXFF734NO1mCmXeR";
-  
-      // Reference the specific document by its ID
-      // const docRef = docs(eventPriceCollectionRef, update_id);
-  
-      // Check if the document with the specified ID exists
+      // Query the collection to check if a document already exists
       const querySnapshot = await getDocs(eventPriceCollectionRef);
   
       if (!querySnapshot.empty) {
-        // If a document exists, update its data
+        console.log("Document already exists. You can update it if needed.");
+        // If the document exists, update it
         const docToUpdate = querySnapshot.docs[0].ref; // Assuming only one document exists
-        const eventPriceData = { price: price };
+        const eventPriceData = { price: newPrice };
   
         await updateDoc(docToUpdate, eventPriceData);
-        
+  
         console.log("Document updated successfully.");
       } else {
         console.log("Document not found. You can add a new one if needed.");
+        // If the document doesn't exist, add a new one
+        const eventPriceData = {
+          price: newPrice,
+        };
+  
+        // Add a new document to the collection
+        const docRef = await addDoc(eventPriceCollectionRef, eventPriceData);
+  
+        console.log("Document written with ID: ", docRef.id);
       }
     } catch (error) {
-      console.error("Error updating document:", error);
+      console.error("Error updating/adding document:", error);
     }
   };
   
+  // Usage in your component
+  const handlePriceChange = async (newPrice) => {
+    setPrice(newPrice);
+    await updatePrice(newPrice);
+    setToggleDropDown(false);
+    
+  };
+
   
+
+
+
   return (
     <div className="dashboad">
       <h2 className="main-heading underline">Dashboard</h2>
@@ -243,14 +259,14 @@ export default function Dashboard() {
             <div className="dashboard-card">
               <div>
                 <h4 className="card-top-heading">Total Users</h4>
-                <h2>{totalUsers} Users</h2>
+                <p className=" font-normal">{totalUsers} Users</p>
               </div>
               <img src={WaveIcon} />
             </div>
             <div className="dashboard-card">
               <div>
                 <h4 className="card-top-heading">Total Events</h4>
-                <h2>{event.length} Posts</h2>
+                <p className="font-normal">{event.length} Posts</p>
               </div>
               <img src={WaveIcon} />
             </div>
@@ -260,14 +276,17 @@ export default function Dashboard() {
             <div className="dashboard-card">
               <div>
                 <h4 className="card-top-heading">Total Revenue</h4>
-                <h2>$ {totalRevenue} </h2>
+                <p className="font-normal">$ {totalRevenue} </p>
               </div>
               <img src={WaveIcon} />
             </div>
             <div className=" dashboard-card relative">
               <div className=" flex justify-between w-full">
                 <div>
-                  Select Price
+                  Set Price
+                  <p className="font-normal">
+                    {price?price:1}
+                  </p>
                 </div>
                 <div className={`${dropDown ? "hidden" : ""}`} onClick={() => {
                   setToggleDropDown(true)
@@ -285,33 +304,21 @@ export default function Dashboard() {
 
                   <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
 
-                    <input value={`0$`} onClick={async()=> {
-                      setPrice(0);
-                            addEventPrice();
-                           await updateEventPrice();
-                      setToggleDropDown(false)
+                    <input value={`0$`} onClick={()=>{
+                      handlePriceChange(0)
                     }} className={` outline-none rounded-md px-4 py-2 text-sm ${price===0?"text-gray-700":"text-gray-500"} hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input onClick={async() => {
-                      setPrice(1);
-                      addEventPrice();
-                      updateEventPrice();
-                      setToggleDropDown(false)
-                    }} value={`1$`} className={`${price===1?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
+                    <input  value={`1$`} onClick={()=>{
+                      handlePriceChange(1)
+                    }} className={`${price===1?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input onClick={async() => {
-                      setPrice(5);
-                      addEventPrice();
-                      await updateEventPrice()
-                      setToggleDropDown(false)
-                    }} value={`5$`} className={` ${price===5?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
+                    <input  value={`5$`} onClick={()=>{
+                      handlePriceChange(5)
+                    }} className={` ${price===5?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`} >
                     </input>
-                    <input onClick={async() => {
-                      setPrice(10);
-                      addEventPrice();
-                      await updateEventPrice();
-                      setToggleDropDown(false)
-                    }} value={`10$`} className={` ${price===10?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`}>
+                    <input  value={`10$`} onClick={()=>{
+                      handlePriceChange(10)
+                    }} className={` ${price===10?"text-gray-700":"text-gray-500"} outline-none rounded-md px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer`}>
                     </input>
                   </div>
 

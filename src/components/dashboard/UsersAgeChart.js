@@ -60,7 +60,7 @@ console.log(data)
 
           label={(e) =>
             e.value > 0
-              ? e.name + ": " + (e.value ).toFixed(1) + "%"
+              ? e.name + " : " + (e.value ).toFixed(1) + "%"
               : ""
           }
           // label={(e) => {
@@ -78,7 +78,8 @@ console.log(data)
 
 
         labelLine={false}
-        fontSize={20}
+        fontSize={16}
+        fontWeight={300}
         paddingAngle={5}
         dataKey="value"
       >

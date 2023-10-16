@@ -9,9 +9,9 @@ export default function MostUserEventsTbody({
 }) {
   return (
     <tr key={key}>
-      <td>{username}</td>
-      <td>{email}</td>
-      <td>{noOfEvents}</td>
+      <td className=" font-normal">{username}</td>
+      <td className=" font-normal">{email}</td>
+      <td className=" font-normal">{noOfEvents}</td>
     </tr>
   );
 }
