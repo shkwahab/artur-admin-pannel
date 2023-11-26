@@ -139,7 +139,7 @@ export default function Users() {
               <th className=" text-black" style={{ color: "black", fontSize: "18px", fontWeight: "bold" }}>Account Type</th>
             </tr>
 
-            {searches(user).map((val, ind) => {
+            {user && searches(user).map((val, ind) => {
 
               return (
                 <UsersTbody

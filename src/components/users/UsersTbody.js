@@ -20,26 +20,26 @@ export default function UsersTbody(props) {
   const [eventIndex, setEventIndex] = useState(0);
 
   const Events = props.events.map((event) => ({
-    id: event.id,
-    Title: event.Title,
-    Total: event.Total,
+    id: event.id ? event.id : "",
+    Title: event.Title ? event.Title : "",
+    Total: event.Total ? event.Total : "",
     Rating: event.rating ? event.rating : "None",
-    Description: event.Description,
-    StartDate: event.StartDate,
-    StartTime: event.StartTime,
-    EndDate: event.EndDate,
-    EndTime: event.EndTime,
-    Website: event.Website,
-    Location: event.Location,
-    ArtistName: event.ArtistData.map((artist) => {
+    Description: event.Description ? event.Description : "",
+    StartDate: event.StartDate ? event.StartDate : "",
+    StartTime: event.StartTime ? event.StartTime : "",
+    EndDate: event.EndDate ? event.EndDate : "",
+    EndTime: event.EndTime ? event.EndTime : "",
+    Website: event.Website ? event.Website : "",
+    Location: event.Location ? event.Location : "",
+    ArtistName: event.ArtistAddress ? event.ArtistData.map((artist) => {
       return artist.ArtistName
-    }),
-    ArtistWebsite: event.ArtistData.map((artist) => {
+    }) : "",
+    ArtistWebsite: event.ArtistWebsite ? event.ArtistData.map((artist) => {
       return artist.Website
-    }),
-    ArtistAddress: event.ArtistData.map((artist) => {
+    }) : "",
+    ArtistAddress: event.ArtistAddress ? event.ArtistData.map((artist) => {
       return artist.ArtistAddress
-    })
+    }) : ""
   }));
   const [updateEvents, setEvents] = useState(Events)
 
