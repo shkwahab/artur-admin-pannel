@@ -50,7 +50,13 @@ export default function UsersTbody(props) {
 
   const hideModal = () => setmodal(false);
 
-
+  const deleteuser = async () => {
+    setIsLoading(true);
+    const deletedocument = doc(db, "UserData", props.id);
+    await deleteDoc(deletedocument);
+    window.location.reload(true);
+    setIsLoading(false);
+  };
 
   const showNextEvent = () => {
     if (eventIndex < Events.length - 1) {
@@ -243,6 +249,16 @@ export default function UsersTbody(props) {
             style={{ cursor: "pointer", backgroundColor: "#887010", color: "#000" }}
           >
             Events
+          </button>
+          <button
+            onClick={() => {
+              // setshowEventModal(true)
+              deleteuser()
+            }}
+            className="decline"
+            style={{ cursor: "pointer", backgroundColor: "#887010", color: "#000" }}
+          >
+            Delete
           </button>
         </td>
       </tr>
